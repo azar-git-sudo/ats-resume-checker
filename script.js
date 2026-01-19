@@ -1,0 +1,57 @@
+async function analyzeResume() {
+  const file = document.getElementById("resumeFile").files[0];
+  const jobDesc = document.getElementById("jobDesc").value.toLowerCase();
+  const results = document.getElementById("results");
+
+  if (!file || !jobDesc) {
+    alert("Upload resume and paste job description");
+    return;
+  }
+
+  let resumeText = "";
+
+  if (file.name.endsWith(".pdf")) {
+    const pdf = await pdfjsLib.getDocument(URL.createObjectURL(file)).promise;
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      resumeText += content.items.map(item => item.str).join(" ");
+    }
+  }
+
+  if (file.name.endsWith(".docx")) {
+    const arrayBuffer = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({ arrayBuffer });
+    resumeText = result.value;
+  }
+
+  resumeText = resumeText.toLowerCase();
+
+  // ATS checks
+  const keywords = jobDesc.match(/\b[a-z]{3,}\b/g) || [];
+  const uniqueKeywords = [...new Set(keywords)];
+
+  let matched = 0;
+  uniqueKeywords.forEach(k => {
+    if (resumeText.includes(k)) matched++;
+  });
+
+  const keywordScore = Math.min(50, Math.round((matched / uniqueKeywords.length) * 50));
+  const lengthScore = resumeText.length > 1500 ? 20 : 10;
+  const sectionScore =
+    resumeText.includes("experience") &&
+    resumeText.includes("skills") &&
+    resumeText.includes("education") ? 30 : 15;
+
+  const atsScore = keywordScore + lengthScore + sectionScore;
+
+  results.innerHTML = `
+    <h3>ATS Score: ${atsScore}/100</h3>
+    <p><b>Keyword Match:</b> ${matched} / ${uniqueKeywords.length}</p>
+    <p><b>Formatting:</b> ${sectionScore === 30 ? "Good" : "Needs Improvement"}</p>
+    <p><b>Resume Length:</b> ${lengthScore === 20 ? "Good" : "Too Short"}</p>
+    <hr>
+    <h4>ATS Text Preview:</h4>
+    <textarea style="width:100%; height:150px">${resumeText}</textarea>
+  `;
+}
