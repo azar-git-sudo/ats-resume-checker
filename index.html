@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ATS Resume Checker - Free Analysis</title>
-
-  <!-- PDF.js & Mammoth -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
-
-  <!-- CSS -->
+  <title>AI-powered ATS Resume Checker</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- Mammoth DOCX -->
+  <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+  <!-- jsPDF for PDF report -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>⚡ ATS Resume Checker</h1>
+      <h1>⚡ AI-powered ATS Resume Checker</h1>
       <p>
+        <span class="badge">✓ Free</span>
         <span class="badge">✓ No Signup</span>
-        <span class="badge">✓ 100% Free</span>
-        <span class="badge">✓ Instant Results</span>
+        <span class="badge">✓ AI Recommendations</span>
       </p>
     </div>
 
@@ -27,7 +28,7 @@
       <div class="upload-area" id="uploadArea" onclick="document.getElementById('resumeFile').click()">
         <div class="upload-icon">📄</div>
         <h3>Upload Your Resume</h3>
-        <p>Drag & drop or click to browse • Supports PDF & DOCX</p>
+        <p>Drag & drop or click to browse • PDF & DOCX</p>
       </div>
       <input type="file" id="resumeFile" accept=".pdf,.docx">
 
@@ -36,29 +37,27 @@
           <span class="file-icon">📎</span>
           <div>
             <strong id="fileName"></strong>
-            <p id="fileSize"></p>
+            <p id="fileSize" style="color:#666;font-size:0.9em;margin-top:4px;"></p>
           </div>
         </div>
         <button onclick="removeFile()">Remove</button>
       </div>
 
-      <button class="btn" id="analyzeBtn" onclick="analyzeResume()" disabled>🔍 Analyze Resume</button>
-
-      <div class="error-message" id="errorMessage"></div>
+      <button class="btn" id="analyzeBtn" onclick="analyzeResume()" disabled>
+        🔍 Analyze Resume
+      </button>
 
       <div class="loading" id="loading">
         <div class="spinner"></div>
-        <p>Analyzing your resume...</p>
+        <p>Analyzing your resume with AI...</p>
       </div>
 
       <div class="results" id="results">
         <div class="score-card">
-          <div class="score-label">Your ATS Score</div>
+          <div class="score-label">AI ATS Score</div>
           <div class="score-value" id="scoreValue">0</div>
           <div class="score-rating" id="scoreRating">Calculating...</div>
         </div>
-
-        <div class="metrics-grid" id="metricsGrid"></div>
 
         <div class="recommendations" id="recommendations">
           <h3>💡 Recommendations</h3>
@@ -66,11 +65,12 @@
         </div>
 
         <div class="preview-section">
-          <h3>📋 ATS-Parsed Content Preview</h3>
+          <h3>📋 ATS Parsed Resume Preview</h3>
           <div class="preview-text" id="previewText"></div>
         </div>
 
         <button class="btn reset-btn" onclick="resetAnalysis()">🔄 Analyze Another Resume</button>
+        <button class="btn pdf-btn" onclick="generatePDF()">📄 Download PDF Report</button>
       </div>
     </div>
   </div>
