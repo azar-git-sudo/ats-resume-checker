@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Free ATS Resume Checker</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+  <!-- Mammoth DOCX -->
+  <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h1>Free ATS Resume Checker</h1>
+  <p>No signup • No payment • Processed locally</p>
+
+  <input type="file" id="resumeFile" accept=".pdf,.docx">
+  
+  <textarea id="jobDesc" placeholder="Paste Job Description here..."></textarea>
+
+  <button onclick="analyzeResume()">Check ATS Score</button>
+
+  <div id="results"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
